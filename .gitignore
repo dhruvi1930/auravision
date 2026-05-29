@@ -1,0 +1,13 @@
+# Python environment tracking isolation
+venv/
+--pycache--/
+*.pyc
+
+# Local runtime testing assets
+test.png
+test.jpg
+*.mp3
+
+# Local memory registers and secrets
+*.db
+.env
