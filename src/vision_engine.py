@@ -11,6 +11,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 from google import genai as google_genai
+from database_manager import insert_memory
 
 
 class ImageAnalysisSchema(BaseModel):
@@ -108,9 +109,19 @@ def analyze_test_image() -> ImageAnalysisSchema:
 
 if __name__ == "__main__":
     try:
+        # 1. Run the vision engine on our test image
         result = analyze_test_image()
         print("✅ Analysis successful!")
         print(json.dumps(result.model_dump(), indent=2))
+        
+        # 2. Automatically save the live result directly into our SQLite memory
+        insert_memory(
+            item=result.item_detected,
+            location=result.spatial_location,
+            confidence=result.confidence_score
+        )
+        print("💾 Live analysis successfully logged to SQLite spatial memory!")
+        
     except FileNotFoundError as e:
         print(f"❌ File Error: {e}")
         print("   Make sure test.png exists in the repository root.")
